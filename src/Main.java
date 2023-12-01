@@ -1,5 +1,8 @@
+import day1.PuzzleSolver;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        PuzzleSolver puzzleSolver = new PuzzleSolver();
+        System.out.println("Ergebnis: " +puzzleSolver.calculate());
     }
 }
