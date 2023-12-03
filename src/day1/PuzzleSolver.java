@@ -19,55 +19,78 @@ public class PuzzleSolver {
         int total = 0;
         try (BufferedReader br = Files.newBufferedReader(path)) {
             List<String> stringList = new ArrayList<>(br.lines().toList());
-            String localTotal = "";
-            List<String> newList = new ArrayList<>();
-
             for (String line : stringList) {
-                total += getString(line.toLowerCase());
+                int returnedValue = parseStringToValue(line);
+                System.out.println(returnedValue);
+                total += returnedValue;
             }
-
         } catch (IOException ioe) {
             System.out.println("Error reading file.");
         }
         return total;
     }
 
-    private int getString(String line) {
-        System.out.println(line);
-        TreeMap<Integer, String> sortedMap = new TreeMap<>();
+    private int parseStringToValue(String line) {
+        TreeMap<Integer, String> map = new TreeMap<>();
         String[] split = line.split("");
+        List<String> keys;
         for (int i = 0; i < split.length; i++) {
-            if (split[i].matches("[1-9]")) {
-                System.out.println("start : " + i + " value: " + split[i]);
-                sortedMap.put(i, split[i]);
-            }
-        }
-
-        for (Map.Entry<String, Integer> number : realNumbers.entrySet()) {
-            if (line.contains(number.getKey())) {
-                int start = 0;
-                StringBuilder match = new StringBuilder();
-                for (int i = 0; i < split.length; i++) {
-                    if (start == 0) {
-                        start = i;
+            if (split[i].matches("[\\d]")) {
+                map.put(i, split[i]);
+            } else {
+                keys = checkStartingCharacter(split[i]);
+                for (String key : keys) {
+                    String returnedValue = checkNextCharacterEquals(key, split, i + 1);
+                    if (!returnedValue.isEmpty()) {
+                        map.put(i, returnedValue);
                     }
-                    if (number.getKey().contains(split[i])) {
-                        match.append(split[i]);
-                        if (match.toString().equals(number.getKey())) {
-                            System.out.println("start : " + start + " value: " + number.getKey());
-                            match.setLength(0);
-                            sortedMap.put(start, String.valueOf(number.getValue()));
-                            start = 0;
-
-                        }
-                       
-
-                    }
-                    System.out.println(match);
                 }
             }
         }
-        System.out.println("First: " + sortedMap.firstEntry().getValue() + " Second: " + sortedMap.lastEntry().getValue());
-        return Integer.parseInt(sortedMap.firstEntry().getValue() + sortedMap.lastEntry().getValue());
+        System.out.println(line);
+        for (Map.Entry<Integer, String> entries : map.entrySet()) {
+            System.out.println("Value: " + entries.getValue() + " Key: " + entries.getKey());
+        }
+        return Integer.parseInt(map.firstEntry().getValue() + map.lastEntry().getValue());
+    }
+
+    private List<String> checkStartingCharacter(String character) {
+        List<String> toReturn = new ArrayList<>();
+        for (Map.Entry<String, Integer> numbers : this.realNumbers.entrySet()) {
+            if (numbers.getKey().startsWith(character)) {
+                toReturn.add(numbers.getKey());
+            }
+        }
+        return toReturn;
+    }
+
+    private String checkNextCharacterEquals(String key, String[] split, int start) {
+        int splitCount = 1;
+        int trueCount = 0;
+        String[] splitKey = key.split("");
+        for (int i = start; i < split.length; i++) {
+            if (i + 1 < split.length && splitCount < splitKey.length) {
+                if (splitKey[splitCount].equals(split[i])) {
+                    trueCount++;
+                }
+                splitCount++;
+                if (trueCount == splitKey.length - 2) {
+                    return String.valueOf(realNumbers.get(key));
+                }
+            }
+        }
+        return "";
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

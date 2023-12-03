@@ -1,8 +1,8 @@
-import day1.PuzzleSolver;
+import day2.GameSolver;
 
 public class Main {
     public static void main(String[] args) {
-        PuzzleSolver puzzleSolver = new PuzzleSolver();
-        System.out.println("Ergebnis: " +puzzleSolver.calculate());
+        GameSolver gameSolver = new GameSolver();
+        gameSolver.solve();
     }
 }
