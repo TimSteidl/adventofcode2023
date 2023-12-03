@@ -35,25 +35,39 @@ public class GameSolver {
 
     private int handleLine(String line) {
         String[] split = line.replace("Game", "").split(":");
-        int id = Integer.parseInt(split[0].strip());
         String[] games = split[1].split(";");
-        boolean valid = true;
+        Game highestGame = new Game(0, 0, 0);
         for (String game : games) {
-            System.out.println(game);
             String[] draw = game.split(",");
             for (String entry : draw) {
                 String[] drawn = entry.stripLeading().split(" ");
-                if (!checkValidity(drawn[1], drawn[0])) {
-                    valid = false;
-                }
+                highestGame = compareGames(highestGame, calculateBalls(drawn[1], drawn[0]));
             }
         }
-        if (valid) {
-            System.out.println(id);
-            return id;
-        } else {
-            return 0;
+        int result = (highestGame.getRed() > 0 ? highestGame.getRed() : 1) *
+                (highestGame.getGreen() > 0 ? highestGame.getGreen() : 1) *
+                (highestGame.getBlue() > 0 ? highestGame.getBlue() : 1);
+        System.out.println(highestGame);
+        return result;
+    }
+
+    public Game compareGames(Game highest, Game toCompare) {
+        highest.setRed(Math.max(highest.getRed(), toCompare.getRed()));
+        highest.setGreen(Math.max(highest.getGreen(), toCompare.getGreen()));
+        highest.setBlue(Math.max(highest.getBlue(), toCompare.getBlue()));
+        return highest;
+    }
+
+    public Game calculateBalls(String color, String amount) {
+        Game currentGame = new Game(0, 0, 0);
+        int size = Integer.parseInt(amount);
+        switch (color) {
+            case "red" -> currentGame.setRed(size);
+            case "green" -> currentGame.setGreen(size);
+            case "blue" -> currentGame.setBlue(size);
+            default -> throw new RuntimeException();
         }
+        return currentGame;
     }
 
     @Deprecated
