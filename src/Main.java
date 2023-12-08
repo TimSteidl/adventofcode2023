@@ -1,8 +1,8 @@
-import day2.GameSolver;
+import day8.HauntedWasteland;
 
 public class Main {
     public static void main(String[] args) {
-        GameSolver gameSolver = new GameSolver();
-        gameSolver.solve();
+        HauntedWasteland hauntedWasteland = new HauntedWasteland();
+        hauntedWasteland.run();
     }
 }

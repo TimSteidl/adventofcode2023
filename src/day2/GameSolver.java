@@ -1,10 +1,7 @@
 package day2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import utils.Reader;
+
 import java.util.List;
 
 public class GameSolver {
@@ -14,7 +11,7 @@ public class GameSolver {
     public static final int BLUE = 14;
 
     public void solve() {
-        List<String> lines = readLines();
+        List<String> lines = Reader.readFile("src/day2/games.txt");
         int total = 0;
         for (String line : lines) {
             total += handleLine(line);
@@ -22,16 +19,6 @@ public class GameSolver {
         System.out.println("Result: " + total);
     }
 
-    private List<String> readLines() {
-        List<String> result = new ArrayList<>();
-        Path path = Path.of("src/day2/games.txt");
-        try (BufferedReader br = Files.newBufferedReader(path)) {
-            result.addAll(br.lines().toList());
-        } catch (IOException ioe) {
-            System.out.println("Error reading file");
-        }
-        return result;
-    }
 
     private int handleLine(String line) {
         String[] split = line.replace("Game", "").split(":");
